@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      network: host
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "6969:6969"
+    environment:
+      DSN: "postgres://user:password@db:5432/mydb?sslmode=disable"
+    command: go run main.go
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
