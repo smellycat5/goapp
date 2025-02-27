@@ -21,12 +21,8 @@ func ConnectToDatabase() {
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
+	fmt.Println("*************************")
+	fmt.Println("Connected to database :)")
+	fmt.Println("*************************")
 
-	fmt.Println("Connected to database")
-
-	//
-	//databaseName := os.Getenv("DATABASE_NAME")
-	//if databaseName == "" {
-	//	log.Fatal("Database name environment variable not set")
-	//}
 }

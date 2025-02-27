@@ -3,6 +3,7 @@ package main
 import (
 	"Go/initializers"
 	"Go/models"
+	"log"
 )
 
 func init() {
@@ -11,5 +12,11 @@ func init() {
 }
 
 func main() {
-	initializers.DB.AutoMigrate(&models.User{})
+	err := initializers.DB.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Fatal("Cannot Migrate database")
+	} else {
+		log.Println("Database migrated")
+	}
+
 }

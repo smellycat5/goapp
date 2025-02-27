@@ -10,5 +10,5 @@ type User struct {
 	Name      string
 	Email     string
 	CreatedAt time.Time
-	UpdatedAt int
+	UpdatedAt time.Time
 }
