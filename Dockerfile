@@ -10,5 +10,3 @@ RUN go mod download
 COPY . .
 
 EXPOSE 6969
-
-CMD ["/app/main"]
