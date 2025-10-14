@@ -22,7 +22,7 @@ func (pc *PostService) Create(createPostDto dto.CreatePostDto, userId int) error
 	post = models.Post{
 		Title:       createPostDto.Title,
 		Description: createPostDto.Description,
-		UserID:      uint(userId),
+		UserId:      userId,
 	}
 
 	if err := pc.DB.Create(&post).Error; err != nil {
@@ -42,7 +42,7 @@ func (pc *PostService) View(postId int, userId int) (models.Post, error) {
 	}
 
 	if result.RowsAffected > 0 {
-		if post.UserID != uint(userId) {
+		if post.UserId != userId {
 			return post, errors.New("post not found")
 		}
 		return post, nil

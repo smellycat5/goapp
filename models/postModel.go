@@ -6,7 +6,7 @@ import (
 
 type Post struct {
 	gorm.Model
-	Title       string `json:"name" binding:"required"`
-	Description string `json:"email" gorm:"unique" binding:"required,email"`
-	UserID      uint
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	UserId      int    `json:"userId" binding:"required"`
 }
