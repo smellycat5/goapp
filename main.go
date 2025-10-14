@@ -2,6 +2,7 @@ package main
 
 import (
 	"Go/controllers/auth"
+	"Go/controllers/post"
 	"Go/controllers/user"
 	"Go/initializers"
 	"Go/middlewares"
@@ -20,7 +21,10 @@ func main() {
 	r := gin.Default()
 
 	userService := services.NewUserService(initializers.DB)
+	postService := services.NewPostService(initializers.DB)
+
 	authController := auth.NewAuthController(userService)
+	postController := post.NewPostController(postService)
 
 	//Auth
 	r.POST("/auth/register", authController.Register)
@@ -32,6 +36,7 @@ func main() {
 	protected.Use(middlewares.JWTAuthMiddleware())
 	{
 		protected.POST("/user/create", user.Create)
+		protected.POST("/post/create", postController.Create)
 	}
 	//protected.Use()
 	r.GET("/user/:id/view", user.View)
