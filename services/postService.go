@@ -3,7 +3,6 @@ package services
 import (
 	"Go/dto"
 	"Go/models"
-	"errors"
 	"gorm.io/gorm"
 )
 
@@ -32,25 +31,29 @@ func (pc *PostService) Create(createPostDto dto.CreatePostDto, userId int) error
 	return nil
 }
 
-func (pc *PostService) View(postId int, userId int) (models.Post, error) {
+func (pc *PostService) View(postUuid string) (models.Post, error) {
 
 	var post models.Post
-	result := pc.DB.First(&post, postId)
+	result := pc.DB.Where("uuid = ?", postUuid).First(&post)
 
 	if result.Error != nil {
-		return post, result.Error
-	}
-
-	if result.RowsAffected > 0 {
-		if post.UserId != userId {
-			return post, errors.New("post not found")
-		}
-		return post, nil
-	}
-
-	if result.RowsAffected == 0 {
-		return post, errors.New("post not found")
+		return models.Post{}, result.Error
 	}
 
 	return post, nil
+}
+
+func (pc *PostService) Delete(postUuid string) error {
+	var post models.Post
+	result := pc.DB.Where("uuid = ?", postUuid).First(&post)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if err := pc.DB.Delete(&post).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

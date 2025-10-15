@@ -8,7 +8,6 @@ import (
 	"Go/middlewares"
 	"Go/services"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func init() {
@@ -30,35 +29,25 @@ func main() {
 	r.POST("/auth/register", authController.Register)
 	r.POST("/auth/login", authController.Login)
 
-	//Users
+	api := r.Group("/api")
 
-	protected := r.Group("/api")
-	protected.Use(middlewares.JWTAuthMiddleware())
+	//User
+	api.Use(middlewares.JWTAuthMiddleware())
 	{
-		protected.POST("/user/create", user.Create)
-		protected.POST("/post/create", postController.Create)
+		api.GET("/user/:id/view", user.View)
+		api.GET("/user/list", user.List)
+		api.POST("/user/:id/delete", user.Delete)
+		api.POST("/user/create", user.Create)
 	}
-	//protected.Use()
-	r.GET("/user/:id/view", user.View)
-	r.POST("/user/:id/delete", user.Delete)
-	r.GET("/user/list", user.List)
 
 	//Posts
+	api.GET("/post/view/:uuid", postController.View)
+
+	api.Use(middlewares.JWTAuthMiddleware())
+	{
+		api.POST("/post/create", postController.Create)
+		api.POST("/post/delete/:uuid", postController.Delete)
+	}
 
 	r.Run(":6969")
-}
-
-func authMiddleware(c *gin.Context) {
-
-	//TODO: implement authentication
-
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
-		tokenString = tokenString[7:]
-	}
 }

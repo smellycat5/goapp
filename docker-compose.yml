@@ -8,12 +8,13 @@ services:
       dockerfile: Dockerfile
     working_dir: /app
     volumes:
-      - .:/app
+      - ./:/app
+      - /app/tmp
     ports:
       - "6969:6969"
     environment:
       DSN: "postgres://user:password@db:5432/mydb?sslmode=disable"
-    command: go run main.go
+    command: [ "air", "-c", ".air.toml" ]
 
   db:
     image: postgres:15

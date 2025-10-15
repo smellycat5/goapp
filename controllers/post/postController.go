@@ -5,6 +5,7 @@ import (
 	"Go/models"
 	"Go/services"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
@@ -50,10 +51,45 @@ func (pc *PostController) Create(c *gin.Context) {
 
 }
 
-//
-//func (pc *PostController) View(c *gin.Context) {
-//	var post models.Post
-//	pc.PostService.View(c)
-//}
+func (pc *PostController) View(c *gin.Context) {
+	uuid := c.Param("uuid")
 
-func (pc *PostController) Delete(c *gin.Context) {}
+	if uuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "uuid cannot be empty"})
+		return
+	}
+
+	post, err := pc.PostService.View(uuid)
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "Post fetched Successfully!", "data": post})
+	}
+}
+
+func (pc *PostController) Delete(c *gin.Context) {
+	uuid := c.Param("uuid")
+
+	if uuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "uuid cannot be empty"})
+		return
+	}
+
+	err := pc.PostService.Delete(uuid)
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "Post Deleted Successfully!"})
+	}
+
+}
