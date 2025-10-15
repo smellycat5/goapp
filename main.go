@@ -47,6 +47,7 @@ func main() {
 	{
 		api.POST("/post/create", postController.Create)
 		api.POST("/post/delete/:uuid", postController.Delete)
+		api.POST("/post/update", postController.Update)
 	}
 
 	r.Run(":6969")

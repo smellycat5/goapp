@@ -9,5 +9,6 @@ type User struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" gorm:"uniqueIndex" binding:"required,email"`
 	Password string `json:"-"`
+	IsAdmin  int16  `gorm:"type:smallint;default:0"`
 	Posts    []Post `json:"posts"`
 }

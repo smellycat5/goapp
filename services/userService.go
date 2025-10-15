@@ -60,8 +60,6 @@ func (s *UserService) Login(request dto.LoginRequest) (string, error) {
 		return token, errors.New("error generating token")
 	}
 
-	//TODO: store jwt token
-
 	return token, nil
 }
 

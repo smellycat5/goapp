@@ -57,3 +57,22 @@ func (pc *PostService) Delete(postUuid string) error {
 
 	return nil
 }
+
+func (pc *PostService) Update(updatePostDto dto.UpdatePostDto) error {
+
+	var post models.Post
+
+	result := pc.DB.Where("uuid=?", updatePostDto.UUID).First(&post)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	post.Title = updatePostDto.Title
+	post.Description = updatePostDto.Description
+
+	if err := pc.DB.Save(&post).Error; err != nil {
+		return err
+	}
+	return nil
+}
